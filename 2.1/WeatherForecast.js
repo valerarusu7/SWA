@@ -1,4 +1,3 @@
-const WeatherDataCollection = require("./WeatherDataCollection");
 const TemperaturePrediction = require("./TemperaturePrediction");
 const PrecipitationPrediction = require("./PrecipitationPrediction");
 const WindPrediction = require("./WindPrediction");
