@@ -25,17 +25,8 @@ class WeatherForecast {
     )
   }
 
-  /**
-   *  Documentation on implementation of this method is not sufficient. Therefore, I assume that
-   *  all the elements of the array have to exist inside the object.  
-   *
-   */
   including(data) {
-    if (data.every(element => this.data().includes(element))) {
-      return new WeatherForecast(data);
-    } else {
-      return null;
-    }
+    return new WeatherForecast(this.data().concat(data));
   }
 
   convertToUSUnits() {
