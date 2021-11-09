@@ -2,16 +2,22 @@ import { configureStore } from '@reduxjs/toolkit'
 import historicalDataSlice from './slices/historicalDataSlice'
 import availableCitiesSlice from './slices/availableCitiesSlice'
 import availableDateIntervalsSlice from './slices/availableDateIntervalsSlice'
-import dataFileteredByCitySlice from './slices/dataFilteredByCitySlice'
-import dataFileteredByCitySliceAndDate from './slices/dataFilteredByCityAndDateSlice'
+import dataFileteredByCitySlice from './slices/historicalDataFilteredByCitySlice'
+import dataFileteredByCitySliceAndDateSlice from './slices/historicalDataFilteredByCityAndDateSlice'
+import forecastDataSliceSlice from './slices/forecastDataSlice'
+import forecastDataSliceFilteredByCitySlice from './slices/forecastDataFilteredByCity'
+import forecastDataSliceFilteredByCitySliceAndDate from './slices/forecastDataFilteredByCityAndDate'
 
 export const store = configureStore({
     reducer: {
       historicalData: historicalDataSlice,
       availableCities: availableCitiesSlice,
       availableDateIntervals: availableDateIntervalsSlice,
-      dataFilteredByCity: dataFileteredByCitySlice,
-      dataFilteredByCityAndDate: dataFileteredByCitySliceAndDate
+      historicalDataFilteredByCity: dataFileteredByCitySlice,
+      historicalDataFilteredByCityAndDate: dataFileteredByCitySliceAndDateSlice,
+      forecastData: forecastDataSliceSlice,
+      forecastDataFilteredByCity: forecastDataSliceFilteredByCitySlice,
+      forecastDataFilteredByCityAndDate: forecastDataSliceFilteredByCitySliceAndDate
     },
   })
 

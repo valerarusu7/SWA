@@ -1,12 +1,15 @@
 import { useEffect, ChangeEvent } from 'react';
-import Forecast from '../../models/Forecast';
+import HistoricalData from '../../models/HistoricalData';
+import ForecastData from '../../models/ForecastData';
 import { useAppSelector, useAppDispatch } from '../../redux/hooks'
 import { updateAvailableCitiesData } from '../../redux/slices/availableCitiesSlice'
-import { updateDataFilteredByCity } from '../../redux/slices/dataFilteredByCitySlice'
+import { updateDataFilteredByCity } from '../../redux/slices/historicalDataFilteredByCitySlice'
+import { updateForecastDataFilteredByCity } from '../../redux/slices/forecastDataFilteredByCity';
 
 const SelectCityBar = () => {
 
-    const historicalData: Forecast[] = useAppSelector(state => state.historicalData.value)
+    const historicalData: HistoricalData[] = useAppSelector(state => state.historicalData.value)
+    const forecastData: ForecastData[] = useAppSelector(state => state.forecastData.value)
     const availableCities: string[] = useAppSelector(state => state.availableCities.value)
     const dispatch = useAppDispatch()
 
@@ -15,7 +18,7 @@ const SelectCityBar = () => {
     }, [historicalData])
 
 
-    function getCities(data: Forecast[]): void {
+    function getCities(data: HistoricalData[]): void {
         const cityEach: string[] = data.map(e => {
             return e.place
         })
@@ -30,8 +33,12 @@ const SelectCityBar = () => {
         if (chosenCity === "All") {
             dispatch(updateDataFilteredByCity(historicalData))
         } else {
-            const filteredData: Forecast[] = historicalData.filter(element => element.place == chosenCity);
-            dispatch(updateDataFilteredByCity(filteredData))
+            const filteredDataHistorical: HistoricalData[] = historicalData.filter(element => element.place == chosenCity);
+            const filteredDataForecast: ForecastData[] = forecastData.filter(element => element.place == chosenCity);
+            // console.log("Filtered forecast data: ")
+            // console.log(filteredDataForecast)
+            dispatch(updateDataFilteredByCity(filteredDataHistorical));
+            dispatch(updateForecastDataFilteredByCity(filteredDataForecast));
         }
     }
 

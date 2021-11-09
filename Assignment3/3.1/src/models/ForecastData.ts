@@ -3,5 +3,6 @@ export default interface Forecast {
     time: Date,
     type: string,
     unit: string,
-    value: number
+    from: number,
+    to: number,
 }

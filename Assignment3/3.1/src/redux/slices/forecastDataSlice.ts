@@ -1,26 +1,26 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import HistoricalData from '../../models/HistoricalData'
+import Forecast from '../../models/ForecastData'
 
 // Define a type for the slice state
-interface HistoricalDataState {
-  value: HistoricalData[]
+interface ForecastDataState {
+  value: Forecast[]
 }
 
 // Define the initial state using that type
-const initialState: HistoricalDataState = {
+const initialState: ForecastDataState = {
   value: []
 }
 
 export const historicalDataSlice = createSlice({
-  name: 'historicalData',
+  name: 'forecastData',
   initialState,
   reducers: {
-    updateHistoricalData: (state, action: PayloadAction<HistoricalData[]>) => {
+    updateForecastData: (state, action: PayloadAction<Forecast[]>) => {
         state.value = action.payload
     }
   }
 })
 
-export const { updateHistoricalData } = historicalDataSlice.actions
+export const { updateForecastData } = historicalDataSlice.actions
 
 export default historicalDataSlice.reducer

@@ -1,5 +1,5 @@
 import { useState} from 'react';
-import Forecast from '../../models/Forecast';
+import HistoricalData from '../../models/HistoricalData';
 import './PostHistoricalData.scss'
 
 const PostHistoricalData = () => {
@@ -11,7 +11,7 @@ const PostHistoricalData = () => {
     const [value, setValue] = useState<number>(0);
 
     function postHistoricalData(): void {
-        let newForecast : Forecast = {
+        let newForecast : HistoricalData = {
             place: place,
             time: new Date(time),
             type: type,

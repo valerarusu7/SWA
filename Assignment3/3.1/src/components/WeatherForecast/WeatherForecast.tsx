@@ -1,17 +1,25 @@
 import { useState, useEffect } from 'react'
-import Forecast from '../../models/Forecast'
+import HistoricalData from '../../models/HistoricalData'
 import { useAppSelector, useAppDispatch } from '../../redux/hooks'
-import { updateHistoricalData } from '../../redux/slices/historicalDataSlice'
 import PostHistoricalData from '../PostHistoricalData/PostHistoricalData'
 import SelectCityBar from '../SelectCityBar/SelectCityBar'
 import DataIntervalBar from '../DateIntervalBar/DateIntervalBar'
 import LatestMeasurements from '../LatestMeasurements/LatestMeasurements'
-import { updateDataFilteredByCity } from '../../redux/slices/dataFilteredByCitySlice'
-import { updateDataFilteredByCityAndDate } from '../../redux/slices/dataFilteredByCityAndDateSlice'
+import { updateHistoricalData } from '../../redux/slices/historicalDataSlice'
+import { updateDataFilteredByCity } from '../../redux/slices/historicalDataFilteredByCitySlice'
+import { updateDataFilteredByCityAndDate } from '../../redux/slices/historicalDataFilteredByCityAndDateSlice'
+import { updateForecastData } from '../../redux/slices/forecastDataSlice'
+import { updateForecastDataFilteredByCity } from '../../redux/slices/forecastDataFilteredByCity'
+import { updateForecastDataFilteredByCityAndDate } from '../../redux/slices/forecastDataFilteredByCityAndDate'
+import Forecast from '../../models/ForecastData'
 
 const WeatherForecast = () => {
-    const dataFilteredByCityAndDate: Forecast[] = useAppSelector(state => state.dataFilteredByCityAndDate.value)
-    const [dataIsReturned, setDataIsReturned] = useState<boolean>(false);
+    const historicalDataFilteredByCityAndDate: HistoricalData[] = useAppSelector(state => state.historicalDataFilteredByCityAndDate.value)
+    const [historicalDataIsReturned, setHistoricalDataIsReturned] = useState<boolean>(false);
+
+    const forecastDataFilteredByCityAndDate: Forecast[] = useAppSelector(state => state.forecastDataFilteredByCityAndDate.value)
+    const [forecastDataIsReturned, setForecastDataIsReturned] = useState<boolean>(false);
+
     const dispatch = useAppDispatch()
 
     useEffect(() => {
@@ -26,7 +34,16 @@ const WeatherForecast = () => {
                 dispatch(updateHistoricalData(data))
                 dispatch(updateDataFilteredByCity(data))
                 dispatch(updateDataFilteredByCityAndDate(data))
-                setDataIsReturned(true);
+                setHistoricalDataIsReturned(true);
+            });
+        const forecastPromise = fetch("http://localhost:8080/forecast");
+        forecastPromise
+            .then(response => response.json())
+            .then(data => {
+                dispatch(updateForecastData(data));
+                dispatch(updateForecastDataFilteredByCity(data));
+                dispatch(updateForecastDataFilteredByCityAndDate(data));
+                setForecastDataIsReturned(true);
             });
     }
 
@@ -34,11 +51,13 @@ const WeatherForecast = () => {
         <div>
             <button onClick={reloadData}>Reload data</button>
             <PostHistoricalData />
-            {dataIsReturned? <SelectCityBar /> : <h6>Loading city bar...</h6>}
-            {dataIsReturned? <DataIntervalBar /> : <h6>Loading data iterval bar...</h6>}
-            {dataIsReturned? <LatestMeasurements /> : <h6>Loading latest measurements...</h6>}
+            {historicalDataIsReturned ? <SelectCityBar /> : <h6>Loading city bar...</h6>}
+            {historicalDataIsReturned ? <DataIntervalBar /> : <h6>Loading data iterval bar...</h6>}
+            {historicalDataIsReturned ? <LatestMeasurements /> : <h6>Loading latest measurements...</h6>}
+            <h3>Forecast Data</h3>
+            {forecastDataIsReturned ? JSON.stringify(forecastDataFilteredByCityAndDate) : <h6>Loading forecast data...</h6>}
             <h3>Historical data: </h3>
-            {JSON.stringify(dataFilteredByCityAndDate)}
+            {historicalDataIsReturned ? JSON.stringify(historicalDataFilteredByCityAndDate) : <h6>Loading historicalData...</h6>}
         </div>
     )
 }

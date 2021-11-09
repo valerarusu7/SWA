@@ -1,25 +1,25 @@
 import { useState, useEffect} from 'react';
 import { useAppSelector } from '../../redux/hooks'
-import Forecast from '../../models/Forecast';
+import HistoricalData from '../../models/HistoricalData';
 
 const LatestMeasurements = () => {
-    const dataFitleredByCity: Forecast[] = useAppSelector(state => state.dataFilteredByCity.value)
-    const [latestMeasurements, setLatestMeasurements] = useState<(Forecast | null)[]>([]);
+    const dataFitleredByCity: HistoricalData[] = useAppSelector(state => state.historicalDataFilteredByCity.value)
+    const [latestMeasurements, setLatestMeasurements] = useState<(HistoricalData | null)[]>([]);
 
     useEffect(() => {
         updateLatestMeasurements(dataFitleredByCity);
     }, [dataFitleredByCity])
 
-    function updateLatestMeasurements(data: Forecast[]) : void {
-        const wind = data.filter(e => e.type == "wind speed");
-        const rain = data.filter(e => e.type == "precipitation");
-        const temp = data.filter(e => e.type == "temperature");
-        const latestMeasurements: (Forecast | null)[] = 
+    function updateLatestMeasurements(data: HistoricalData[]) : void {
+        const wind = data.filter(e => e.type === "wind speed");
+        const rain = data.filter(e => e.type === "precipitation");
+        const temp = data.filter(e => e.type === "temperature");
+        const latestMeasurements: (HistoricalData | null)[] = 
             [getLatestMeasurement(wind), getLatestMeasurement(rain), getLatestMeasurement(temp)]; 
         setLatestMeasurements(latestMeasurements);
     }
 
-    function getLatestMeasurement(data: Forecast[]) : Forecast | null {
+    function getLatestMeasurement(data: HistoricalData[]) : HistoricalData | null {
         if(data.length == 0) {
             return null;
         }

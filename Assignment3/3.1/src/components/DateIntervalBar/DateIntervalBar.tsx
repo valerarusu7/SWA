@@ -1,12 +1,16 @@
 import { useEffect, useState, ChangeEvent } from 'react';
-import Forecast from '../../models/Forecast';
+import HistoricalData from '../../models/HistoricalData';
+import ForecastData from '../../models/ForecastData';
 import { useAppSelector, useAppDispatch } from '../../redux/hooks'
 import { updateAvailableDateIntervals } from '../../redux/slices/availableDateIntervalsSlice';
-import { updateDataFilteredByCityAndDate } from '../../redux/slices/dataFilteredByCityAndDateSlice'
+import { updateDataFilteredByCityAndDate } from '../../redux/slices/historicalDataFilteredByCityAndDateSlice'
+import { updateForecastDataFilteredByCityAndDate } from '../../redux/slices/forecastDataFilteredByCityAndDate';
+import json5 from 'json5';
 
 const DateIntervalBar = () => {
 
-    const dataFitleredByCity: Forecast[] = useAppSelector(state => state.dataFilteredByCity.value);
+    const dataFitleredByCity: HistoricalData[] = useAppSelector(state => state.historicalDataFilteredByCity.value);
+    const forecastDataFilteredByCity: ForecastData[] = useAppSelector(state => state.forecastDataFilteredByCity.value);
     const availableDateIntervals: string[] = useAppSelector(state => state.availableDateIntervals.value);
     const dispatch = useAppDispatch();
     const [fromDate, setFromDate] = useState<Date>();
@@ -14,31 +18,43 @@ const DateIntervalBar = () => {
     const [tillDates, setTillDates] = useState<string[]>([]);
 
     useEffect(() => {
-        updateDateIntervals(dataFitleredByCity);
-    }, [dataFitleredByCity])
+        updateDateIntervals(dataFitleredByCity, forecastDataFilteredByCity);
+    }, [dataFitleredByCity, forecastDataFilteredByCity])
 
-    function updateDateIntervals(data: Forecast[]): void {
-        const dateEach: Date[] = data.map(e => {
+    function updateDateIntervals(historicalData: HistoricalData[], forecastData: ForecastData[]): void {
+        const historicalDateEach: Date[] = historicalData.map(e => {
             return e.time
         })
+        const forecastDateEach: Date[] = forecastData.map(e => {
+            return e.time
+        })
+        const dateEach: Date[] = historicalDateEach.concat(forecastDateEach);
         const uniqueDates: Date[] = dateEach.filter(function (item, pos, self) {
             return self.indexOf(item) == pos;
         })
         const intervals: string[] = getAvailableDateIntervals(uniqueDates);
         dispatch(updateAvailableDateIntervals(intervals));
         setTillDates(intervals);
+
         dispatch(updateDataFilteredByCityAndDate(dataFitleredByCity));
+        console.log("Filtered forecast data: ")
+        console.log(forecastDataFilteredByCity)
+        dispatch(updateForecastDataFilteredByCityAndDate(forecastDataFilteredByCity));
     }
 
     function getAvailableDateIntervals(all_dates: Date[]): string[] {
-        const min = all_dates.reduce(function (a, b) { return a < b ? a : b; });
-        const max = all_dates.reduce(function (a, b) { return a > b ? a : b; });
+        const sortedDates = all_dates.sort();
+
+        const min = sortedDates[0];
+        const max = sortedDates[sortedDates.length - 1];
 
         const minDate = new Date(min);
         const maxDate = new Date(max);
+
         setFromDate(minDate);
         setTillDate(maxDate);
-
+        console.log("Setting till date to " + maxDate);
+        console.log("Till date: " + tillDate)
         let dates: string[] = [];
         let newDate = new Date(min);
 
@@ -59,13 +75,13 @@ const DateIntervalBar = () => {
             dates.push(new Date(newDate).toString());
             newDate.setDate(newDate.getDate() + 1);
         }
-  
+
         filterByDate(selectedDate, tillDate!.toString());
         setTillDates(dates);
     }
 
     function changeTillDate(event: ChangeEvent<HTMLSelectElement>): void {
-        const selectedDate: string= event.target.value;
+        const selectedDate: string = event.target.value;
         setTillDate(new Date(selectedDate));
         filterByDate(fromDate!.toString(), selectedDate);
     }
@@ -73,22 +89,33 @@ const DateIntervalBar = () => {
     function filterByDate(from: string, till: string): void {
         dataFitleredByCity.map(element => {
         })
-        const filteredData = dataFitleredByCity.filter(element => new Date(element.time) >= new Date(from) && new Date(element.time) <= new Date(till));
-        dispatch(updateDataFilteredByCityAndDate(filteredData));
+        if(till !== "All") {
+            const historicalFilteredData = dataFitleredByCity.filter(element => new Date(element.time) >= new Date(from) && new Date(element.time) <= new Date(till));
+            dispatch(updateDataFilteredByCityAndDate(historicalFilteredData));
+            const forecastFilteredData = forecastDataFilteredByCity.filter(element => new Date(element.time) >= new Date(from) && new Date(element.time) <= new Date(till));
+            dispatch(updateForecastDataFilteredByCityAndDate(forecastFilteredData));
+        } else {
+            const historicalFilteredData = dataFitleredByCity.filter(element => new Date(element.time) >= new Date(from));
+            dispatch(updateDataFilteredByCityAndDate(historicalFilteredData));
+            const forecastFilteredData = forecastDataFilteredByCity.filter(element => new Date(element.time) >= new Date(from));
+            dispatch(updateForecastDataFilteredByCityAndDate(forecastFilteredData));
+        }
+
     }
 
     return (
         <div>
             <div>
                 <h3>From:</h3>
-                <select name="from-dates" id="select-from-date" onChange={(event) => changeFromDate(event)}>
+                <select name="from-dates" id="select-from-date" onChange={(event) => changeFromDate(event)} value={fromDate?.toString()}>
                     {availableDateIntervals.map(e => <option value={e} key={e}>{e}</option>)}
                 </select>
             </div>
             <div>
                 <h3>Till:</h3>
-                <select name="dates" id="select-till-date" onChange={(event) => changeTillDate(event)}>
-                    {tillDates.map(e => <option value={e} key={e} selected>{e}</option>)}
+                <select name="dates" id="select-till-date" onChange={(event) => changeTillDate(event)} value={tillDate?.toString()}>
+                    <option value="All">All</option>
+                    {tillDates.map(e => <option value={e} key={e}>{e}</option>)}
                 </select>
             </div>
         </div>

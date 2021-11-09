@@ -1,9 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import Forecast from '../../models/Forecast'
+import HistoricalData from '../../models/HistoricalData'
 
 // Define a type for the slice state
 interface DataFilteredByCityAndDateState {
-  value: Forecast[]
+  value: HistoricalData[]
 }
 
 // Define the initial state using that type
@@ -12,10 +12,10 @@ const initialState: DataFilteredByCityAndDateState = {
 }
 
 export const dataFileteredByCityAndDateSlice = createSlice({
-  name: 'dataFilteredByCityAndDate',
+  name: 'historicalDataFilteredByCityAndDate',
   initialState,
   reducers: {
-    updateDataFilteredByCityAndDate: (state, action: PayloadAction<Forecast[]>) => {
+    updateDataFilteredByCityAndDate: (state, action: PayloadAction<HistoricalData[]>) => {
         state.value = action.payload
     }
   }
