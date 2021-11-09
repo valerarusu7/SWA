@@ -37,8 +37,6 @@ const DateIntervalBar = () => {
         setTillDates(intervals);
 
         dispatch(updateDataFilteredByCityAndDate(dataFitleredByCity));
-        console.log("Filtered forecast data: ")
-        console.log(forecastDataFilteredByCity)
         dispatch(updateForecastDataFilteredByCityAndDate(forecastDataFilteredByCity));
     }
 
@@ -53,8 +51,7 @@ const DateIntervalBar = () => {
 
         setFromDate(minDate);
         setTillDate(maxDate);
-        console.log("Setting till date to " + maxDate);
-        console.log("Till date: " + tillDate)
+
         let dates: string[] = [];
         let newDate = new Date(min);
 
