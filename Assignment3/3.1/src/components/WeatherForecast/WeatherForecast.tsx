@@ -12,6 +12,7 @@ import { updateForecastData } from '../../redux/slices/forecastDataSlice'
 import { updateForecastDataFilteredByCity } from '../../redux/slices/forecastDataFilteredByCity'
 import { updateForecastDataFilteredByCityAndDate } from '../../redux/slices/forecastDataFilteredByCityAndDate'
 import Forecast from '../../models/ForecastData'
+import './WeatherForecast.scss'
 
 const WeatherForecast = () => {
     const historicalDataFilteredByCityAndDate: HistoricalData[] = useAppSelector(state => state.historicalDataFilteredByCityAndDate.value)
@@ -49,15 +50,69 @@ const WeatherForecast = () => {
 
     return (
         <div>
-            <button onClick={reloadData}>Reload data</button>
             <PostHistoricalData />
+            <br />
+            <button onClick={reloadData}>Reload data</button>
             {historicalDataIsReturned ? <SelectCityBar /> : <h6>Loading city bar...</h6>}
             {historicalDataIsReturned ? <DataIntervalBar /> : <h6>Loading data iterval bar...</h6>}
             {historicalDataIsReturned ? <LatestMeasurements /> : <h6>Loading latest measurements...</h6>}
             <h3>Forecast Data</h3>
-            {forecastDataIsReturned ? JSON.stringify(forecastDataFilteredByCityAndDate) : <h6>Loading forecast data...</h6>}
+
+            {forecastDataIsReturned ?
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Time</th>
+                            <th>Place</th>
+                            <th>Type</th>
+                            <th>Unit</th>
+                            <th>From</th>
+                            <th>To</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {forecastDataFilteredByCityAndDate.map(item => {
+                            return (
+                                <tr>
+                                    <td>{item.time}</td>
+                                    <td>{item.place}</td>
+                                    <td>{item.type}</td>
+                                    <td>{item.unit}</td>
+                                    <td>{item.from}</td>
+                                    <td>{item.to}</td>
+                                </tr>
+                            );
+                        })}
+                    </tbody>
+                </table>
+                : <h6>Loading forecast data...</h6>}
             <h3>Historical data: </h3>
-            {historicalDataIsReturned ? JSON.stringify(historicalDataFilteredByCityAndDate) : <h6>Loading historicalData...</h6>}
+            {historicalDataIsReturned ?
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Time</th>
+                            <th>Place</th>
+                            <th>Type</th>
+                            <th>Unit</th>
+                            <th>Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {historicalDataFilteredByCityAndDate.map(item => {
+                            return (
+                                <tr>
+                                    <td>{item?.time}</td>
+                                    <td>{item?.place}</td>
+                                    <td>{item?.type}</td>
+                                    <td>{item?.unit}</td>
+                                    <td>{item?.value}</td>
+                                </tr>
+                            );
+                        })}
+                    </tbody>
+                </table>
+                : <h6>Loading historicalData...</h6>}
         </div>
     )
 }

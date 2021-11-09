@@ -5,6 +5,7 @@ import { useAppSelector, useAppDispatch } from '../../redux/hooks'
 import { updateAvailableCitiesData } from '../../redux/slices/availableCitiesSlice'
 import { updateDataFilteredByCity } from '../../redux/slices/historicalDataFilteredByCitySlice'
 import { updateForecastDataFilteredByCity } from '../../redux/slices/forecastDataFilteredByCity';
+import './SelectCityBar.scss'
 
 const SelectCityBar = () => {
 
@@ -43,7 +44,7 @@ const SelectCityBar = () => {
     }
 
     return (
-        <div>
+        <div className="select-city-bar">
             <h3>Choose city</h3>
             <select name="cities" id="select-city" onChange={(event) => filterByCity(event)}>
                 <option value="All">All</option>

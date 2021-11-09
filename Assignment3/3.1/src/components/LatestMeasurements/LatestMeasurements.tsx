@@ -1,6 +1,7 @@
 import { useState, useEffect} from 'react';
 import { useAppSelector } from '../../redux/hooks'
 import HistoricalData from '../../models/HistoricalData';
+import './LatestMeasurements.scss'
 
 const LatestMeasurements = () => {
     const dataFitleredByCity: HistoricalData[] = useAppSelector(state => state.historicalDataFilteredByCity.value)
@@ -31,7 +32,30 @@ const LatestMeasurements = () => {
     return (
         <div>
             <h3>Latest measurements:</h3>
-            <p>{JSON.stringify(latestMeasurements)}</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>Place</th>
+                        <th>Type</th>
+                        <th>Unit</th>
+                        <th>Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {latestMeasurements.map(item => {
+                        return (
+                            <tr>
+                                <td>{item?.time}</td>
+                                <td>{item?.place}</td>
+                                <td>{item?.type}</td>
+                                <td>{item?.unit}</td>
+                                <td>{item?.value}</td>
+                            </tr>
+                        );
+                    })}
+                </tbody>
+            </table> 
         </div>
     )
 }
