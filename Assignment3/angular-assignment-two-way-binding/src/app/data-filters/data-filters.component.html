@@ -1,0 +1,7 @@
+<p>Data filters component</p>
+<select [(ngModel)]='selectedCity' (ngModelChange)="updateCity($event)">
+  <option value="All">All</option>
+  <option *ngFor="let city of uniqueCities" [value]="city">
+    {{city}}
+  </option>
+</select>

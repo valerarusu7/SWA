@@ -1,0 +1,9 @@
+<p>Weather forecast component</p>
+<button (click)="loadTheData()">Reload data</button>
+<app-data-filters [historicalData]="historicalData" [forecastData]="forecastData"
+[historicalDataToDisplay]="historicalDataToDisplay" [forecastDataToDisplay]="forecastDataToDisplay"
+[selectedCity]="selectedCity" (newSelectedCity)="getCityUpdateNotification($event)"
+>
+</app-data-filters>
+<app-forecast-data-table [forecastDataToDisplay]="forecastDataToDisplay"></app-forecast-data-table>
+<app-historical-data-table [historicalDataToDisplay]="historicalDataToDisplay"></app-historical-data-table>

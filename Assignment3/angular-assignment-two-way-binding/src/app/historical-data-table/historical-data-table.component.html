@@ -1,0 +1,21 @@
+<p>Historical Data table component</p>
+<table>
+  <thead>
+    <tr>
+      <th>Time</th>
+      <th>Place</th>
+      <th>Type</th>
+      <th>Unit</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let item of historicalDataToDisplay">
+      <td>{{item.time}}</td>
+      <td>{{item.place}}</td>
+      <td>{{item.type}}</td>
+      <td>{{item.unit}}</td>
+      <td>{{item.value}}</td>
+    </tr>
+  </tbody>
+</table>
