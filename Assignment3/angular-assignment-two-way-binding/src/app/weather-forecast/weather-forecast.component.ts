@@ -41,6 +41,8 @@ export class WeatherForecastComponent implements OnInit {
         this.forecastData = Response;
         this.forecastDataToDisplay = Response;
       })
+      // Refresh the field
+      this.selectedCity = "All";
   }
 
   getCityUpdateNotification(newCity: any) {
