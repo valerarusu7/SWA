@@ -4,12 +4,12 @@ import HistoricalData from '../../models/HistoricalData';
 import './LatestMeasurements.scss'
 
 const LatestMeasurements = () => {
-    const dataFitleredByCity: HistoricalData[] = useAppSelector(state => state.historicalDataFilteredByCity.value)
+    const historicalDataFiltered: HistoricalData[] = useAppSelector(state => state.historicalDataFiltered.value)
     const [latestMeasurements, setLatestMeasurements] = useState<(HistoricalData | null)[]>([]);
 
     useEffect(() => {
-        updateLatestMeasurements(dataFitleredByCity);
-    }, [dataFitleredByCity])
+        updateLatestMeasurements(historicalDataFiltered);
+    }, [historicalDataFiltered])
 
     function updateLatestMeasurements(data: HistoricalData[]) : void {
         const wind = data.filter(e => e.type === "wind speed");

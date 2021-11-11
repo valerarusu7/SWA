@@ -3,11 +3,13 @@ import HistoricalData from '../../models/HistoricalData';
 import ForecastData from '../../models/ForecastData';
 import { useAppSelector, useAppDispatch } from '../../redux/hooks'
 import { updateAvailableCitiesData } from '../../redux/slices/availableCitiesSlice'
-import { updateDataFilteredByCity } from '../../redux/slices/historicalDataFilteredByCitySlice'
-import { updateForecastDataFilteredByCity } from '../../redux/slices/forecastDataFilteredByCity';
 import './SelectCityBar.scss'
 
-const SelectCityBar = () => {
+interface SelectCityBarProps {
+    cityUpdateCallback(cityUpdate: string): void;
+}
+
+const SelectCityBar = (props: SelectCityBarProps) => {
 
     const historicalData: HistoricalData[] = useAppSelector(state => state.historicalData.value)
     const forecastData: ForecastData[] = useAppSelector(state => state.forecastData.value)
@@ -15,38 +17,33 @@ const SelectCityBar = () => {
     const dispatch = useAppDispatch()
 
     useEffect(() => {
-        getCities(historicalData);
+        getCities(historicalData, forecastData);
     }, [historicalData])
 
-
-    function getCities(data: HistoricalData[]): void {
-        const cityEach: string[] = data.map(e => {
+  
+    function getCities(historicalData: HistoricalData[], forecastData: ForecastData[]): void {
+        const cityEachHistoricalData: string[] = historicalData.map(e => {
             return e.place
         })
+        const cityEachForecastData: string[] = forecastData.map(e => {
+            return e.place
+        })
+        const cityEach: string[] = cityEachForecastData.concat(cityEachHistoricalData);
         const uniqueCities: string[] = cityEach.filter(function (item, pos, self) {
-            return self.indexOf(item) == pos;
+            return self.indexOf(item) === pos;
         })
         dispatch(updateAvailableCitiesData(uniqueCities));
     }
 
-    function filterByCity(event: ChangeEvent<HTMLSelectElement>): void {
+    function cityUpdate(event: ChangeEvent<HTMLSelectElement>): void {
         const chosenCity = event.target.value;
-        if (chosenCity === "All") {
-            dispatch(updateDataFilteredByCity(historicalData))
-        } else {
-            const filteredDataHistorical: HistoricalData[] = historicalData.filter(element => element.place == chosenCity);
-            const filteredDataForecast: ForecastData[] = forecastData.filter(element => element.place == chosenCity);
-            // console.log("Filtered forecast data: ")
-            // console.log(filteredDataForecast)
-            dispatch(updateDataFilteredByCity(filteredDataHistorical));
-            dispatch(updateForecastDataFilteredByCity(filteredDataForecast));
-        }
+        props.cityUpdateCallback(chosenCity);
     }
 
     return (
         <div className="select-city-bar">
             <h3>Choose city</h3>
-            <select name="cities" id="select-city" onChange={(event) => filterByCity(event)}>
+            <select name="cities" id="select-city" onChange={(event) => cityUpdate(event)}>
                 <option value="All">All</option>
                 {availableCities.map(e => <option value={e} key={e}>{e}</option>)}
             </select>
