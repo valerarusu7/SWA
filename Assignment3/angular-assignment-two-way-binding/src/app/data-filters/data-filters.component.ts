@@ -29,7 +29,20 @@ export class DataFiltersComponent implements OnInit, OnChanges {
   @Input()
   selectedCity: string = "All";
   
-  @Output() newSelectedCity: EventEmitter<string> = new EventEmitter();
+  @Output() 
+  newSelectedCity: EventEmitter<string> = new EventEmitter();
+
+  @Input()
+  selectedFromDate? : Date;
+
+  @Output()
+  newSelectedFromDate : EventEmitter<Date> = new EventEmitter();
+
+  @Input()
+  selectedTillDate? : Date;
+
+  @Output()
+  newSelectedTillDate : EventEmitter<Date> = new EventEmitter();
 
   constructor() { }
 
@@ -46,6 +59,14 @@ export class DataFiltersComponent implements OnInit, OnChanges {
 
   updateCity(event: MouseEvent): void {
     this.newSelectedCity.emit(this.selectedCity);
+  }
+
+  updateSelectedFromDate(event: MouseEvent): void {
+    this.newSelectedFromDate.emit(this.selectedFromDate);
+  }
+
+  updateSelectedTillDate(event: MouseEvent): void {
+    this.newSelectedTillDate.emit(this.selectedTillDate);
   }
 
   getCities(historicalData: HistoricalData[], forecastData: ForecastData[]): string[] {
@@ -71,11 +92,11 @@ export class DataFiltersComponent implements OnInit, OnChanges {
     })
     const sortedDates = uniqueDates.sort();
 
-    const minDate = sortedDates[0];
-    const maxDate = sortedDates[sortedDates.length - 1];
+    const min = sortedDates[0];
+    const max = sortedDates[sortedDates.length - 1];
 
-    // const minDate = new Date(min);
-    // const maxDate = new Date(max);
+    const minDate = new Date(min);
+    const maxDate = new Date(max);
 
     let dates: Date[] = [];
     let newDate = new Date(minDate);

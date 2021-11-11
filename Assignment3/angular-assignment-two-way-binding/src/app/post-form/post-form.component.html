@@ -1,1 +1,16 @@
-<p>post-form works!</p>
+<h3>Post historical data</h3>
+
+<div className="post-data-form">
+  <h4>Insert historical data to post</h4>
+  <label> Place </label>
+  <input type="text" [(ngModel)]="place" />
+  <label> Time </label>
+  <input type="text" [(ngModel)]="time" />
+  <label> Type </label>
+  <input type="text" [(ngModel)]="type" />
+  <label> Unit </label>
+  <input type="text" [(ngModel)]="unit" />
+  <label> Value </label>
+  <input type="text" [(ngModel)]="value" />
+  <button (click)="sendData()">Send data</button>
+</div>

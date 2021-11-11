@@ -41,26 +41,49 @@ export class WeatherForecastComponent implements OnInit {
         this.forecastData = Response;
         this.forecastDataToDisplay = Response;
       })
-      // Refresh the field
-      this.selectedCity = "All";
+    // Refresh the fields
+    this.selectedCity = "All";
+    this.selectedFromDate = undefined;
+    this.selectedTillDate = undefined;
   }
 
   getCityUpdateNotification(newCity: any) {
     this.selectedCity = newCity;
-    this.filterByCity();
+    this.filterData();
   }
 
+  getSelectedFromDateUpdateNotification(newFromDate: Date) {
+    this.selectedFromDate = newFromDate;
+    this.filterData();
+  }
 
-  filterByCity(): void {
-    if (this.selectedCity === "All") {
-      this.historicalDataToDisplay = this.historicalData;
-      this.forecastDataToDisplay = this.forecastData;
-    } else {
-      this.historicalDataToDisplay =
-        this.historicalData.filter(element => element.place == this.selectedCity);
-      this.forecastDataToDisplay =
-        this.forecastData.filter(element => element.place == this.selectedCity);
+  getSelectedTillDateUpdateNotification(newTillDate: any) {
+    this.selectedTillDate = newTillDate;
+    this.filterData();
+  }
+
+  filterData(): void {
+    let filteredHistoricalDataToDisplay: HistoricalData[] = [...this.historicalData];
+    let filteredForecastDataToDisplay: ForecastData[] = [...this.forecastData];
+    if (this.selectedCity !== "All") {
+      filteredHistoricalDataToDisplay =
+        filteredHistoricalDataToDisplay.filter(element => element.place == this.selectedCity);
+      filteredForecastDataToDisplay =
+        filteredForecastDataToDisplay.filter(element => element.place == this.selectedCity);
+    }
+    if (this.selectedFromDate !== undefined) {
+      let fromDate: Date = this.selectedFromDate;
+      filteredHistoricalDataToDisplay = filteredHistoricalDataToDisplay.filter(element => new Date(element.time) >= new Date(fromDate));
+      filteredForecastDataToDisplay = filteredForecastDataToDisplay.filter(element => new Date(element.time) >= new Date(fromDate));
+    }
+    if (this.selectedTillDate !== undefined) {
+      let tillDate: Date = this.selectedTillDate;
+      filteredHistoricalDataToDisplay = filteredHistoricalDataToDisplay.filter(element => new Date(element.time) <= new Date(tillDate));
+      filteredForecastDataToDisplay = filteredForecastDataToDisplay.filter(element => new Date(element.time) <= new Date(tillDate));
+
     }
 
+    this.historicalDataToDisplay = filteredHistoricalDataToDisplay;
+    this.forecastDataToDisplay = filteredForecastDataToDisplay;
   }
 }
