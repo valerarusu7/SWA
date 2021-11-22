@@ -1,11 +1,13 @@
 <app-post-form></app-post-form>
 <button (click)="loadTheData()">Reload data</button>
 <app-data-filters [historicalData]="historicalData" [forecastData]="forecastData"
-[historicalDataToDisplay]="historicalDataToDisplay" [forecastDataToDisplay]="forecastDataToDisplay"
+[historicalDataToDisplay]="historicalDataToDisplay" [forecastDataToDisplay]="forecastDataToDisplay"  
 [selectedCity]="selectedCity" (newSelectedCity)="getCityUpdateNotification($event)"
 [selectedFromDate]="selectedFromDate" (newSelectedFromDate)="getSelectedFromDateUpdateNotification($event)"
-[selectedTillDate]="selectedTillDate" (newSelectedTillDate)="getSelectedTillDateUpdateNotification($event)"
+[selectedFromDate]="selectedFromDate" (newSelectedFromDate)="getSelectedFromDateUpdateNotification($event)"
+[severityLevel]="severityLevel" (newSeverityLevel)="getUpdateSevirityLevelNotification($event)"
 >
 </app-data-filters>
+<app-warnings [warningsDataToDisplay]="warningsDataToDisplay"></app-warnings>
 <app-forecast-data-table [forecastDataToDisplay]="forecastDataToDisplay"></app-forecast-data-table>
 <app-historical-data-table [historicalDataToDisplay]="historicalDataToDisplay"></app-historical-data-table>

@@ -10,6 +10,8 @@ import { PostFormComponent } from './post-form/post-form.component';
 import { DataFiltersComponent } from './data-filters/data-filters.component';
 import { HistoricalDataTableComponent } from './historical-data-table/historical-data-table.component';
 import { ForecastDataTableComponent } from './forecast-data-table/forecast-data-table.component';
+import { WarningsComponent } from './warnings/warnings.component';
+
 
 @NgModule({
   declarations: [
@@ -18,7 +20,8 @@ import { ForecastDataTableComponent } from './forecast-data-table/forecast-data-
     PostFormComponent,
     DataFiltersComponent,
     HistoricalDataTableComponent,
-    ForecastDataTableComponent
+    ForecastDataTableComponent,
+    WarningsComponent
   ],
   imports: [
     BrowserModule,

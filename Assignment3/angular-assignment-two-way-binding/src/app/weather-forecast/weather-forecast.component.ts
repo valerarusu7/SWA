@@ -1,8 +1,15 @@
 import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import HistoricalData from '../models/HistoricalData';
+import WarningsData from '../models/WarningsData'
 import ForecastData from '../models/ForecastData';
 import { Observable } from 'rxjs';
+import WarningData from '../models/WarningData';
+import { timer, interval } from 'rxjs';
+import { Subject } from 'rxjs';
+import { concatMap, map, merge, } from 'rxjs/operators';
+import { Subscription } from 'rxjs'
+
 
 @Component({
   selector: 'app-weather-forecast',
@@ -14,9 +21,17 @@ export class WeatherForecastComponent implements OnInit {
 
   historicalData: HistoricalData[] = [];
   forecastData: ForecastData[] = [];
+  warningsData: WarningsData;
+  warningData: WarningData[]=[];
+  filteredWarningsDataToDisplay: WarningData[] =[];
+  
+
 
   historicalDataToDisplay: HistoricalData[] = [];
   forecastDataToDisplay: ForecastData[] = [];
+  warningsDataToDisplay: WarningsData;
+  warningDataToDisplay: WarningData[]=[];
+
 
   selectedCity: string = "All";
 
@@ -24,10 +39,44 @@ export class WeatherForecastComponent implements OnInit {
 
   selectedTillDate?: Date;
 
+  severityLevel?: number=0;
+  
+  timeInterval : number = 10000;
+
+  polledWarnings: Observable<WarningsData>;
+  manualRefresh = new Subject();
+  sub: Subscription;
+  dataToShow: WarningsData;
+
   constructor(private http: HttpClient) { }
 
   ngOnInit(): void {
     this.loadTheData();
+    this.startInterval();
+  }
+
+
+  startInterval() {
+    this.polledWarnings = timer(0, this.timeInterval).pipe(
+        merge(this.manualRefresh),
+        concatMap(_ => this.http.get<WarningsData>('http://localhost:8080/warnings')),
+        map((Response : WarningsData) => {
+          console.log( "Response")
+          this.warningsData = Response;
+          this.warningsDataToDisplay = Response;
+          this.warningsDataToDisplay.warnings = this.warningsData.warnings.filter(element =>  element.severity >= this.severityLevel);
+          console.log( Response)
+          return Response;
+          }),
+      );
+      this.sub = this.polledWarnings.subscribe((data) => {
+      });
+  }
+
+  getUpdateSevirityLevelNotification(newSeverityLevel: any) {
+    this.severityLevel = newSeverityLevel;
+      this.warningsDataToDisplay.warnings = this.warningsData.warnings.filter(element =>  element.severity >= this.severityLevel);
+      this.startInterval();
   }
 
   loadTheData(): void {
@@ -61,7 +110,7 @@ export class WeatherForecastComponent implements OnInit {
     this.selectedTillDate = newTillDate;
     this.filterData();
   }
-
+  
   filterData(): void {
     let filteredHistoricalDataToDisplay: HistoricalData[] = [...this.historicalData];
     let filteredForecastDataToDisplay: ForecastData[] = [...this.forecastData];
