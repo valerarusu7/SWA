@@ -1,0 +1,16 @@
+.post-data-form {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    h4 {
+        text-align: center;
+    }
+    input {
+        padding: 8px;
+        margin: 8px;
+    }
+}
+
+body{
+    color: red;
+}

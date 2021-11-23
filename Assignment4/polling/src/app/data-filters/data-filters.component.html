@@ -1,0 +1,40 @@
+<p>Data filters component</p>
+<div class="filters">
+  <div class="select-column">
+    <h3>Set Minimum severity level</h3>
+    <input [(ngModel)]="severityLevel" (ngModelChange)="updateSeverityLevel($event)">
+  </div>
+  <div class="select-column">
+    <h3>Choose city</h3>
+    <select [(ngModel)]="selectedCity" (ngModelChange)="updateCity($event)">
+      <option value="All">All</option>
+      <option *ngFor="let city of uniqueCities" [value]="city">
+        {{ city }}
+      </option>
+    </select>
+  </div>
+
+  <div class="select-column">
+    <h3>From Date</h3>
+    <select
+      [(ngModel)]="selectedFromDate"
+      (ngModelChange)="updateSelectedFromDate($event)"
+    >
+      <option *ngFor="let dateInterval of dateIntervals" [value]="dateInterval">
+        {{ dateInterval }}
+      </option>
+    </select>
+  </div>
+
+  <div class="select-column">
+    <h3>Till Date</h3>
+    <select
+      [(ngModel)]="selectedTillDate"
+      (ngModelChange)="updateSelectedTillDate($event)"
+    >
+      <option *ngFor="let dateInterval of dateIntervals" [value]="dateInterval">
+        {{ dateInterval }}
+      </option>
+    </select>
+  </div>
+</div>
