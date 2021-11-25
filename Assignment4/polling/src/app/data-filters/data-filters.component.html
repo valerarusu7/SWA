@@ -11,18 +11,4 @@
       <option value="Disabled">Disabled</option>
     </select>
   </div>
-
-  
-
-  <div class="select-column">
-    <h3>Till Date</h3>
-    <select
-      [(ngModel)]="selectedTillDate"
-      (ngModelChange)="updateSelectedTillDate($event)"
-    >
-      <option *ngFor="let dateInterval of dateIntervals" [value]="dateInterval">
-        {{ dateInterval }}
-      </option>
-    </select>
-  </div>
 </div>

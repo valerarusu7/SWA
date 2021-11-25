@@ -1,5 +1,5 @@
-<h3>Warnings data</h3>
-<div *ngIf="warningsDataToDisplay">{{warningsDataToDisplay.time}}
+<h3>Latest Warnings data</h3>
+<div *ngIf="latestDataToDisplay">{{latestDataToDisplay.time}}
   <table>
     <thead>
       <tr>
@@ -17,10 +17,10 @@
     </thead>
     <tbody>
      
-      <tr *ngFor="let item of warningsDataToDisplay.warnings">
+      <tr *ngFor="let item of latestDataToDisplay.warnings">
         <td>{{item.id}}</td>
         <td>{{item.severity}}</td>
-        <td>{{item.prediction.from}}</td>
+        <!-- <td>{{item.prediction.from}}</td>
         <td>{{item.prediction.to}}</td>
         <td>{{item.prediction.directions}}</td>
         <td>{{item.prediction.precipitation_types}}</td>
@@ -28,12 +28,11 @@
         <td>{{item.prediction.unit}}</td>
         <td>{{item.prediction.time}}</td>
         <td>{{item.prediction.place}}</td>
-    
+     -->
       </tr>
     </tbody>
   </table>
-  
+   
 </div>
 
-   
 <hr>

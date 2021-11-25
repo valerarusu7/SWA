@@ -11,6 +11,7 @@ import { DataFiltersComponent } from './data-filters/data-filters.component';
 import { HistoricalDataTableComponent } from './historical-data-table/historical-data-table.component';
 import { ForecastDataTableComponent } from './forecast-data-table/forecast-data-table.component';
 import { WarningsComponent } from './warnings/warnings.component';
+import { LatestWarningsComponent } from './latest-warnings/latest-warnings.component';
 
 
 @NgModule({
@@ -21,7 +22,8 @@ import { WarningsComponent } from './warnings/warnings.component';
     DataFiltersComponent,
     HistoricalDataTableComponent,
     ForecastDataTableComponent,
-    WarningsComponent
+    WarningsComponent,
+    LatestWarningsComponent
   ],
   imports: [
     BrowserModule,

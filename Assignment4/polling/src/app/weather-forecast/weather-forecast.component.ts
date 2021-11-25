@@ -22,44 +22,30 @@ import { distinctUntilKeyChanged, pluck } from 'rxjs/operators'
 
 export class WeatherForecastComponent implements OnInit {
 
-  historicalData: HistoricalData[] = [];
-  forecastData: ForecastData[] = [];
+ 
   warningsData: WarningsData;
   warningData: WarningData[]=[];
+  LatestData: WarningsData;
 
-  historicalDataToDisplay: HistoricalData[] = [];
-  forecastDataToDisplay: ForecastData[] = [];
+
   warningsDataToDisplay: WarningsData;
+  latestDataToDisplay: WarningsData;
   warningDataToDisplay: WarningData[]=[];
   lastUpdate: Date;
 
-private subjectKeyUp= new Subject<any>();
-
-  selectedCity: string = "All";
-
   notifications: string= "Enabled";
-
-  selectedFromDate?: Date;
-
-  selectedTillDate?: Date;
-
-  severityLevel?: number=0;
-  
-  timeInterval : number = 100;
-
+  severityLevel: number=0;
+  timeInterval : number =20000;
   polledWarnings: Observable<WarningsData>;
-  manualRefresh = new Subject();
   sub: Subscription;
-  dataToShow: WarningsData;
 
   constructor(private http: HttpClient) { }
 
   ngOnInit(): void {
-    this.loadTheData();
     this.startInterval();
+
   }
 
- 
 
   startInterval() {
     this.polledWarnings = timer(0, this.timeInterval).pipe(
@@ -69,18 +55,23 @@ private subjectKeyUp= new Subject<any>();
           console.log( "Response")
           this.warningsData = Response;
           this.warningsDataToDisplay = Response;
-          this.warningData=this.warningsData.warnings;
-          this.lastUpdate=this.warningsData.time;
+
+          this.loadTheData(this.warningsDataToDisplay.time);
+
           this.warningsDataToDisplay.warnings = this.warningsData.warnings.filter(element =>  element.severity >= this.severityLevel);
+          this.latestDataToDisplay.warnings = this.warningsData.warnings.filter(element =>  element.severity >= this.severityLevel);
           console.log( Response)
           return Response;
           }),
       );
+      
       this.sub = this.polledWarnings.subscribe((data) => {
       });
-
-  console.log("no data")
 }
+
+  sortWarningsByDate(data: WarningData []): WarningData[] {
+    return data.sort((a,b)=>a.prediction.time.getTime()-b.prediction.time.getTime())
+  }
 
   getUpdateSevirityLevelNotification(newSeverityLevel: any) {
     this.severityLevel = newSeverityLevel;
@@ -88,32 +79,23 @@ private subjectKeyUp= new Subject<any>();
       this.startInterval();
   }
 
-  loadTheData(): void {
-    this.http.get<HistoricalData[]>('http://localhost:8080/data')
-      .subscribe(Response => {
-        this.historicalData = Response;
-        this.historicalDataToDisplay = Response;
-      })
-    this.http.get<ForecastData[]>('http://localhost:8080/forecast')
-      .subscribe(Response => {
-        this.forecastData = Response;
-        this.forecastDataToDisplay = Response;
-      })
-    // Refresh the fields
-    this.selectedCity = "All";
-    this.selectedFromDate = undefined;
-    this.selectedTillDate = undefined;
-  }
+  // loadTheData(): void {
+  //   this.http.get<WarningsData>('http://localhost:8080/warnings/since/2021-11-25T17:14:08.828Z')
+  //     .subscribe(Response => {
+  //       this.latestDataToDisplay = Response;
+  //       this.latestDataToDisplay.warnings = this.latestDataToDisplay.warnings.filter(element =>  element.severity >= this.severityLevel);
+  //     });
+  //   }
 
-  getCityUpdateNotification(newCity: any) {
-    this.selectedCity = newCity;
-    this.filterData();
-  }
+  loadTheData(latestTime: Date): void {
+    this.http.get<WarningsData>('http://localhost:8080/warnings/since/'+latestTime)
+      .subscribe(Response => {
+        this.latestDataToDisplay = Response;
+        this.latestDataToDisplay.warnings = this.latestDataToDisplay.warnings.filter(element =>  element.severity >= this.severityLevel);
+      });
+    }
 
-  getSelectedFromDateUpdateNotification(newFromDate: Date) {
-    this.selectedFromDate = newFromDate;
-    this.filterData();
-  }
+
 
   getSelectedNotificationStatus(status: any) {
     this.notifications = status;
@@ -122,27 +104,8 @@ private subjectKeyUp= new Subject<any>();
 
   
   filterData(): void {
-    let filteredHistoricalDataToDisplay: HistoricalData[] = [...this.historicalData];
-    let filteredForecastDataToDisplay: ForecastData[] = [...this.forecastData];
-    let filteredWarningDataToDisplay: ForecastData[] = [...this.forecastData];
+  
 
-    if (this.selectedCity !== "All") {
-      filteredHistoricalDataToDisplay =
-        filteredHistoricalDataToDisplay.filter(element => element.place == this.selectedCity);
-      filteredForecastDataToDisplay =
-        filteredForecastDataToDisplay.filter(element => element.place == this.selectedCity);
-    }
-    if (this.selectedFromDate !== undefined) {
-      let fromDate: Date = this.selectedFromDate;
-      filteredHistoricalDataToDisplay = filteredHistoricalDataToDisplay.filter(element => new Date(element.time) >= new Date(fromDate));
-      filteredForecastDataToDisplay = filteredForecastDataToDisplay.filter(element => new Date(element.time) >= new Date(fromDate));
-    }
-    if (this.selectedTillDate !== undefined) {
-      let tillDate: Date = this.selectedTillDate;
-      filteredHistoricalDataToDisplay = filteredHistoricalDataToDisplay.filter(element => new Date(element.time) <= new Date(tillDate));
-      filteredForecastDataToDisplay = filteredForecastDataToDisplay.filter(element => new Date(element.time) <= new Date(tillDate));
-
-    }    
     if (this.notifications == "Enabled") {
       this.warningsDataToDisplay.warnings=[];
       this.startInterval();
@@ -151,8 +114,5 @@ private subjectKeyUp= new Subject<any>();
       this.warningsDataToDisplay.warnings=[];
     }
     console.log(this.notifications)
-    
-    this.historicalDataToDisplay = filteredHistoricalDataToDisplay;
-    this.forecastDataToDisplay = filteredForecastDataToDisplay;
   }
 }

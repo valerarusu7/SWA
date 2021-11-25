@@ -4,17 +4,20 @@ import WarningsData from '../models/WarningsData';
 
 
 @Component({
-  selector: 'app-warnings',
-  templateUrl: './warnings.component.html',
-  styleUrls: ['./warnings.component.scss']
+  selector: 'app-latest-warnings',
+  templateUrl: './latest-warnings.component.html',
+  styleUrls: ['./latest-warnings.component.scss']
 })
-export class WarningsComponent implements OnInit {
+export class LatestWarningsComponent implements OnInit {
+
+
 
   @Input()
-  warningsDataToDisplay: WarningsData;
+  latestDataToDisplay: WarningsData;
 
   constructor() { }
 
   ngOnInit(): void {
   }
+
 }
