@@ -55,9 +55,8 @@ export class WeatherForecastComponent implements OnInit {
           console.log( "Response")
           this.warningsData = Response;
           this.warningsDataToDisplay = Response;
-
           this.loadTheData(this.warningsDataToDisplay.time);
-
+          // this.loadTheData();
           this.warningsDataToDisplay.warnings = this.warningsData.warnings.filter(element =>  element.severity >= this.severityLevel);
           this.latestDataToDisplay.warnings = this.warningsData.warnings.filter(element =>  element.severity >= this.severityLevel);
           console.log( Response)
