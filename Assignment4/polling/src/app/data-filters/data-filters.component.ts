@@ -18,6 +18,7 @@ export class DataFiltersComponent implements OnInit, OnChanges {
   forecastData: ForecastData[] = [];
 
 
+
   @Input()
   historicalDataToDisplay: HistoricalData[] = [];
 
@@ -27,9 +28,11 @@ export class DataFiltersComponent implements OnInit, OnChanges {
   @Input()
   warningsData: WarningData;
 
-
   @Input()
   warningsDataToDisplay: WarningData;
+
+  @Input()
+  notifications: string= "Enabled";
 
   uniqueCities: string[] = [];
 
@@ -48,6 +51,10 @@ export class DataFiltersComponent implements OnInit, OnChanges {
 
   @Output() 
   newSeverityLevel: EventEmitter<number> = new EventEmitter();
+
+  @Output() 
+  newNotificationStatus: EventEmitter<string> = new EventEmitter();
+
 
   @Input()
   selectedFromDate? : Date;
@@ -76,6 +83,11 @@ export class DataFiltersComponent implements OnInit, OnChanges {
 
   updateCity(event: MouseEvent): void {
     this.newSelectedCity.emit(this.selectedCity);
+  }
+
+
+  updateStatus(event: MouseEvent): void {
+    this.newNotificationStatus.emit(this.notifications);
   }
 
   updateSeverityLevel(event: MouseEvent): void {

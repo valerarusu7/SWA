@@ -7,8 +7,11 @@ import { Observable } from 'rxjs';
 import WarningData from '../models/WarningData';
 import { timer, interval } from 'rxjs';
 import { Subject } from 'rxjs';
-import { concatMap, map, merge, } from 'rxjs/operators';
+import { concatMap, map, merge, mergeScan, } from 'rxjs/operators';
 import { Subscription } from 'rxjs'
+import { distinctUntilChanged } from 'rxjs/operators';
+import { distinct } from 'rxjs/operators';
+import { distinctUntilKeyChanged, pluck } from 'rxjs/operators'
 
 
 @Component({
@@ -23,17 +26,17 @@ export class WeatherForecastComponent implements OnInit {
   forecastData: ForecastData[] = [];
   warningsData: WarningsData;
   warningData: WarningData[]=[];
-  filteredWarningsDataToDisplay: WarningData[] =[];
-  
-
 
   historicalDataToDisplay: HistoricalData[] = [];
   forecastDataToDisplay: ForecastData[] = [];
   warningsDataToDisplay: WarningsData;
   warningDataToDisplay: WarningData[]=[];
 
+private subjectKeyUp= new Subject<any>();
 
   selectedCity: string = "All";
+
+  notifications: string= "Enabled";
 
   selectedFromDate?: Date;
 
@@ -41,7 +44,7 @@ export class WeatherForecastComponent implements OnInit {
 
   severityLevel?: number=0;
   
-  timeInterval : number = 10000;
+  timeInterval : number = 20000;
 
   polledWarnings: Observable<WarningsData>;
   manualRefresh = new Subject();
@@ -55,23 +58,36 @@ export class WeatherForecastComponent implements OnInit {
     this.startInterval();
   }
 
+ 
 
   startInterval() {
     this.polledWarnings = timer(0, this.timeInterval).pipe(
-        merge(this.manualRefresh),
         concatMap(_ => this.http.get<WarningsData>('http://localhost:8080/warnings')),
         map((Response : WarningsData) => {
           console.log( "Response")
           this.warningsData = Response;
           this.warningsDataToDisplay = Response;
+          this.warningData=this.warningsData.warnings;
+          distinctUntilKeyChanged(this.warningData.length.toString())
           this.warningsDataToDisplay.warnings = this.warningsData.warnings.filter(element =>  element.severity >= this.severityLevel);
           console.log( Response)
           return Response;
           }),
+       
       );
       this.sub = this.polledWarnings.subscribe((data) => {
       });
   }
+  
+  maybeNewer(url,g){
+    this.http.get<WarningsData>('http://localhost:8080/warnings')
+  }
+
+  checkForNewData(g){
+    return this.http.get<WarningsData>('http://localhost:8080/warnings')+"?baseline"+g.version;
+  }
+
+  
 
   getUpdateSevirityLevelNotification(newSeverityLevel: any) {
     this.severityLevel = newSeverityLevel;
@@ -106,14 +122,17 @@ export class WeatherForecastComponent implements OnInit {
     this.filterData();
   }
 
-  getSelectedTillDateUpdateNotification(newTillDate: any) {
-    this.selectedTillDate = newTillDate;
+  getSelectedNotificationStatus(status: any) {
+    this.notifications = status;
     this.filterData();
   }
+
   
   filterData(): void {
     let filteredHistoricalDataToDisplay: HistoricalData[] = [...this.historicalData];
     let filteredForecastDataToDisplay: ForecastData[] = [...this.forecastData];
+    let filteredWarningDataToDisplay: ForecastData[] = [...this.forecastData];
+
     if (this.selectedCity !== "All") {
       filteredHistoricalDataToDisplay =
         filteredHistoricalDataToDisplay.filter(element => element.place == this.selectedCity);
@@ -130,8 +149,15 @@ export class WeatherForecastComponent implements OnInit {
       filteredHistoricalDataToDisplay = filteredHistoricalDataToDisplay.filter(element => new Date(element.time) <= new Date(tillDate));
       filteredForecastDataToDisplay = filteredForecastDataToDisplay.filter(element => new Date(element.time) <= new Date(tillDate));
 
+    }    
+    if (this.notifications == "Disabled") {
+      this.warningsDataToDisplay.warnings=[];
+    }else{
+      this.startInterval();
     }
-
+    
+    console.log(this.notifications)
+    
     this.historicalDataToDisplay = filteredHistoricalDataToDisplay;
     this.forecastDataToDisplay = filteredForecastDataToDisplay;
   }

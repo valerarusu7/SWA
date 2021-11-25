@@ -6,6 +6,7 @@
 [selectedFromDate]="selectedFromDate" (newSelectedFromDate)="getSelectedFromDateUpdateNotification($event)"
 [selectedFromDate]="selectedFromDate" (newSelectedFromDate)="getSelectedFromDateUpdateNotification($event)"
 [severityLevel]="severityLevel" (newSeverityLevel)="getUpdateSevirityLevelNotification($event)"
+[selectedCity]="notifications" (newNotificationStatus)="getSelectedNotificationStatus($event)"
 >
 </app-data-filters>
 <app-warnings [warningsDataToDisplay]="warningsDataToDisplay"></app-warnings>
