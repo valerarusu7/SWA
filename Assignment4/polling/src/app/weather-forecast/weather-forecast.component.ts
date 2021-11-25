@@ -10,7 +10,7 @@ import { Subject } from 'rxjs';
 import { concatMap, map, merge, mergeScan, } from 'rxjs/operators';
 import { Subscription } from 'rxjs'
 import { distinctUntilChanged } from 'rxjs/operators';
-import { distinct } from 'rxjs/operators';
+import { takeWhile } from 'rxjs/operators';
 import { distinctUntilKeyChanged, pluck } from 'rxjs/operators'
 
 
@@ -31,6 +31,7 @@ export class WeatherForecastComponent implements OnInit {
   forecastDataToDisplay: ForecastData[] = [];
   warningsDataToDisplay: WarningsData;
   warningDataToDisplay: WarningData[]=[];
+  lastUpdate: Date;
 
 private subjectKeyUp= new Subject<any>();
 
@@ -44,7 +45,7 @@ private subjectKeyUp= new Subject<any>();
 
   severityLevel?: number=0;
   
-  timeInterval : number = 20000;
+  timeInterval : number = 100;
 
   polledWarnings: Observable<WarningsData>;
   manualRefresh = new Subject();
@@ -63,31 +64,23 @@ private subjectKeyUp= new Subject<any>();
   startInterval() {
     this.polledWarnings = timer(0, this.timeInterval).pipe(
         concatMap(_ => this.http.get<WarningsData>('http://localhost:8080/warnings')),
+        takeWhile(val => this.notifications!= "Disabled"),
         map((Response : WarningsData) => {
           console.log( "Response")
           this.warningsData = Response;
           this.warningsDataToDisplay = Response;
           this.warningData=this.warningsData.warnings;
-          distinctUntilKeyChanged(this.warningData.length.toString())
+          this.lastUpdate=this.warningsData.time;
           this.warningsDataToDisplay.warnings = this.warningsData.warnings.filter(element =>  element.severity >= this.severityLevel);
           console.log( Response)
           return Response;
           }),
-       
       );
       this.sub = this.polledWarnings.subscribe((data) => {
       });
-  }
-  
-  maybeNewer(url,g){
-    this.http.get<WarningsData>('http://localhost:8080/warnings')
-  }
 
-  checkForNewData(g){
-    return this.http.get<WarningsData>('http://localhost:8080/warnings')+"?baseline"+g.version;
-  }
-
-  
+  console.log("no data")
+}
 
   getUpdateSevirityLevelNotification(newSeverityLevel: any) {
     this.severityLevel = newSeverityLevel;
@@ -150,12 +143,13 @@ private subjectKeyUp= new Subject<any>();
       filteredForecastDataToDisplay = filteredForecastDataToDisplay.filter(element => new Date(element.time) <= new Date(tillDate));
 
     }    
-    if (this.notifications == "Disabled") {
+    if (this.notifications == "Enabled") {
       this.warningsDataToDisplay.warnings=[];
-    }else{
       this.startInterval();
     }
-    
+    else{
+      this.warningsDataToDisplay.warnings=[];
+    }
     console.log(this.notifications)
     
     this.historicalDataToDisplay = filteredHistoricalDataToDisplay;
