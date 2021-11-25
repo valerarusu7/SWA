@@ -1,8 +1,6 @@
 import { Component, Input, OnInit, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import HistoricalData from '../models/HistoricalData';
 import ForecastData from '../models/ForecastData';
-import WarningData from '../models/WarningData';
-
 
 @Component({
   selector: 'app-data-filters',
@@ -24,30 +22,15 @@ export class DataFiltersComponent implements OnInit, OnChanges {
   @Input()
   forecastDataToDisplay: ForecastData[] = [];
 
-  @Input()
-  warningsData: WarningData;
-
-
-  @Input()
-  warningsDataToDisplay: WarningData;
-
   uniqueCities: string[] = [];
 
   dateIntervals: Date[] = [];
 
   @Input()
   selectedCity: string = "All";
-
-  @Input()
-  severityLevel: number= 0;
-
   
   @Output() 
   newSelectedCity: EventEmitter<string> = new EventEmitter();
-
-
-  @Output() 
-  newSeverityLevel: EventEmitter<number> = new EventEmitter();
 
   @Input()
   selectedFromDate? : Date;
@@ -78,11 +61,6 @@ export class DataFiltersComponent implements OnInit, OnChanges {
     this.newSelectedCity.emit(this.selectedCity);
   }
 
-  updateSeverityLevel(event: MouseEvent): void {
-    console.log(this.severityLevel);
-    this.newSeverityLevel.emit(this.severityLevel);
-  }
-
   updateSelectedFromDate(event: MouseEvent): void {
     this.newSelectedFromDate.emit(this.selectedFromDate);
   }
@@ -100,7 +78,6 @@ export class DataFiltersComponent implements OnInit, OnChanges {
     })
     return uniqueCities;
   }
-
 
   getAvailableDateIntervals(historicalData: HistoricalData[], forecastData: ForecastData[]): Date[] {
     const historicalDateEach: Date[] = historicalData.map(e => {

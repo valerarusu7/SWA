@@ -1,10 +1,6 @@
 <p>Data filters component</p>
 <div class="filters">
   <div class="select-column">
-    <h3>Set Minimum severity level</h3>
-    <input [(ngModel)]="severityLevel" (ngModelChange)="updateSeverityLevel($event)">
-  </div>
-  <div class="select-column">
     <h3>Choose city</h3>
     <select [(ngModel)]="selectedCity" (ngModelChange)="updateCity($event)">
       <option value="All">All</option>
