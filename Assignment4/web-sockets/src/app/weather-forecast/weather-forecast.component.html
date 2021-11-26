@@ -1,0 +1,8 @@
+<app-data-filters 
+[severityLevel]="severityLevel" (newSeverityLevel)="updateSevirityLevelNotification($event)"
+[notifications]="notifications" (newNotificationStatus)="getSelectedNotificationStatus($event)"
+>
+</app-data-filters>
+<app-warnings [warningsDataToDisplay]="warningsDataToDisplay"></app-warnings>
+<app-latest-warnings [latestDataToDisplay]="latestDataToDisplay"></app-latest-warnings>
+

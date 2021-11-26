@@ -1,0 +1,14 @@
+<p>Data filters component</p>
+<div class="filters">
+  <div class="select-column">
+    <h3>Set Minimum severity level</h3>
+    <input [(ngModel)]="severityLevel" (ngModelChange)="updateSeverityLevel($event)">
+  </div>
+  <div class="select-column">
+    <h3>Disable Notifications</h3>
+    <select [(ngModel)]="notifications" (ngModelChange)="updateStatus($event)">
+      <option value="Enabled">Enabled</option>
+      <option value="Disabled">Disabled</option>
+    </select>
+  </div>
+</div>

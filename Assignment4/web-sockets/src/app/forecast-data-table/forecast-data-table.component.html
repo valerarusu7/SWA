@@ -1,0 +1,24 @@
+<h3>Forecast data</h3>
+<table>
+  <thead>
+    <tr>
+      <th>Time</th>
+      <th>Place</th>
+      <th>Type</th>
+      <th>Unit</th>
+      <th>From</th>
+      <th>To</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let item of forecastDataToDisplay">
+      <td>{{item.time}}</td>
+      <td>{{item.place}}</td>
+      <td>{{item.type}}</td>
+      <td>{{item.unit}}</td>
+      <td>{{item.from}}</td>
+      <td>{{item.to}}</td>
+    </tr>
+  </tbody>
+</table>
+<hr>

@@ -1,0 +1,37 @@
+<h3>Latest Warnings data</h3>
+<div>
+  <table>
+    <thead>
+      <tr>
+        <th>id</th>
+        <th>severity</th>
+        <th>from</th>
+        <th>to</th>
+        <th>direction</th>
+        <th>precipitation types</th>
+        <th>type</th>
+        <th>unit</th>
+        <th>time</th>
+        <th>place</th>
+      </tr>
+    </thead>
+    <tbody>
+     
+      <tr *ngIf="latestDataToDisplay">
+        <td>{{latestDataToDisplay.id}}</td>
+        <td>{{latestDataToDisplay.severity}}</td>
+        <td>{{latestDataToDisplay.prediction.from}}</td>
+        <td>{{latestDataToDisplay.prediction.to}}</td>
+        <td>{{latestDataToDisplay.prediction.directions}}</td>
+        <td>{{latestDataToDisplay.prediction.precipitation_types}}</td>
+        <td>{{latestDataToDisplay.prediction.type}}</td>
+        <td>{{latestDataToDisplay.prediction.unit}}</td>
+        <td>{{latestDataToDisplay.prediction.time}}</td>
+        <td>{{latestDataToDisplay.prediction.place}}</td>
+      </tr>
+    </tbody>
+  </table>
+   
+</div>
+
+<hr>

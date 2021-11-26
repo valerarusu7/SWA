@@ -1,0 +1,38 @@
+<h3>Warnings data</h3>
+<div *ngIf="warningsDataToDisplay">
+  {{ warningsDataToDisplay.time }}
+  <div class="scrollable-div">
+    <table>
+      <thead>
+        <tr>
+          <th>id</th>
+          <th>severity</th>
+          <th>from</th>
+          <th>to</th>
+          <th>direction</th>
+          <th>precipitation types</th>
+          <th>type</th>
+          <th>unit</th>
+          <th>time</th>
+          <th>place</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of warningsDataToDisplay.warnings">
+          <td>{{ item.id }}</td>
+          <td>{{ item.severity }}</td>
+          <td *ngIf="item.prediction.from">{{ item.prediction.from }}</td>
+          <td>{{ item.prediction.to }}</td>
+          <td>{{ item.prediction.directions }}</td>
+          <td>{{ item.prediction.precipitation_types }}</td>
+          <td>{{ item.prediction.type }}</td>
+          <td>{{ item.prediction.unit }}</td>
+          <td>{{ item.prediction.time }}</td>
+          <td>{{ item.prediction.place }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<hr />
