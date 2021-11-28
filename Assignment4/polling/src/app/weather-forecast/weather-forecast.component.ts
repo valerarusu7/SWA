@@ -43,7 +43,6 @@ export class WeatherForecastComponent implements OnInit {
 
   ngOnInit(): void {
     this.startInterval();
-
   }
 
 
@@ -52,18 +51,12 @@ export class WeatherForecastComponent implements OnInit {
         concatMap(_ => this.http.get<WarningsData>('http://localhost:8080/warnings')),
         takeWhile(val => this.notifications!= "Disabled"),
         map((Response : WarningsData) => {
-          console.log( "Response")
           this.warningsData = Response;
           this.warningsDataToDisplay = Response;
           this.loadTheData(this.warningsDataToDisplay.time);
-          // this.loadTheData();
-          this.warningsDataToDisplay.warnings = this.warningsData.warnings.filter(element =>  element.severity >= this.severityLevel);
-          this.latestDataToDisplay.warnings = this.warningsData.warnings.filter(element =>  element.severity >= this.severityLevel);
-          console.log( Response)
           return Response;
           }),
       );
-      
       this.sub = this.polledWarnings.subscribe((data) => {
       });
 }
@@ -87,7 +80,9 @@ export class WeatherForecastComponent implements OnInit {
   //   }
 
   loadTheData(latestTime: Date): void {
-    this.http.get<WarningsData>('http://localhost:8080/warnings/since/'+latestTime)
+     var myPastDate=new Date(latestTime);
+         myPastDate.setSeconds(myPastDate.getDate() - 20);
+    this.http.get<WarningsData>('http://localhost:8080/warnings/since/'+myPastDate)
       .subscribe(Response => {
         this.latestDataToDisplay = Response;
         this.latestDataToDisplay.warnings = this.latestDataToDisplay.warnings.filter(element =>  element.severity >= this.severityLevel);
@@ -103,8 +98,6 @@ export class WeatherForecastComponent implements OnInit {
 
   
   filterData(): void {
-  
-
     if (this.notifications == "Enabled") {
       this.warningsDataToDisplay.warnings=[];
       this.startInterval();
@@ -112,6 +105,5 @@ export class WeatherForecastComponent implements OnInit {
     else{
       this.warningsDataToDisplay.warnings=[];
     }
-    console.log(this.notifications)
   }
 }

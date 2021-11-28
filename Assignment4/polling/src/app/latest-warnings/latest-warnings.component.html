@@ -20,14 +20,14 @@
       <tr *ngFor="let item of latestDataToDisplay.warnings">
         <td>{{item.id}}</td>
         <td>{{item.severity}}</td>
-        <td>{{item.prediction.from}}</td>
-        <td>{{item.prediction.to}}</td>
-        <td>{{item.prediction.directions}}</td>
-        <td>{{item.prediction.precipitation_types}}</td>
-        <td>{{item.prediction.type}}</td>
-        <td>{{item.prediction.unit}}</td>
-        <td>{{item.prediction.time}}</td>
-        <td>{{item.prediction.place}}</td>
+        <td *ngIf="item.prediction">{{ item.prediction.from }}</td>
+        <td *ngIf="item.prediction">{{item.prediction.to}}</td>
+        <td *ngIf="item.prediction">{{item.prediction.directions}}</td>
+        <td *ngIf="item.prediction">{{item.prediction.precipitation_types}}</td>
+        <td *ngIf="item.prediction">{{item.prediction.type}}</td>
+        <td *ngIf="item.prediction">{{item.prediction.unit}}</td>
+        <td *ngIf="item.prediction">{{item.prediction.time}}</td>
+        <td *ngIf="item.prediction">{{item.prediction.place}}</td>
       </tr>
     </tbody>
   </table>
