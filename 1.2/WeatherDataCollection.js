@@ -2,9 +2,6 @@ class WeatherDataCollection {
   getCurrentPlace() {
     return this.place;
   }
-  setCurrentPlace(place) {
-    this.place = place;
-  }
   clearCurrentPlace() {
     this.place = undefined;
   }
@@ -20,12 +17,16 @@ class WeatherDataCollection {
   getCurrentPeriod() {
     return this.period;
   }
-  setCurrentPeriod(period) {
-    this.period = period;
-  }
-  clearCurrentPeriod() {
-    this.period = undefined;
-  }
 }
+
+WeatherDataCollection.prototype.clearCurrentPeriod = function () {
+  this.period = undefined;
+};
+WeatherDataCollection.prototype.setCurrentPeriod = function (period) {
+  this.period = period;
+};
+WeatherDataCollection.prototype.setCurrentPlace = function (place) {
+  this.place = place;
+};
 
 module.exports = WeatherDataCollection;
